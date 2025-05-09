@@ -12,18 +12,22 @@
                 <div class="p-6 text-gray-900">
                     <h2 class="text-lg font-medium mb-4">{{ __('Task Summary') }}</h2>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
                             <div class="text-3xl font-bold text-blue-600">{{ Auth::user()->tasks()->count() }}</div>
                             <div class="text-sm text-blue-600">全タスク</div>
                         </div>
-                        <div class="bg-green-50 p-4 rounded-lg border border-green-100">
-                            <div class="text-3xl font-bold text-green-600">{{ Auth::user()->tasks()->where('is_completed', true)->count() }}</div>
-                            <div class="text-sm text-green-600">完了済みタスク</div>
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                            <div class="text-3xl font-bold text-gray-600">{{ Auth::user()->tasks()->where('status', App\Models\Task::STATUS_TODO)->count() }}</div>
+                            <div class="text-sm text-gray-600">未着手</div>
                         </div>
-                        <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100">
-                            <div class="text-3xl font-bold text-yellow-600">{{ Auth::user()->tasks()->where('is_completed', false)->count() }}</div>
-                            <div class="text-sm text-yellow-600">未完了タスク</div>
+                        <div class="bg-blue-100 p-4 rounded-lg border border-blue-200">
+                            <div class="text-3xl font-bold text-blue-700">{{ Auth::user()->tasks()->where('status', App\Models\Task::STATUS_IN_PROGRESS)->count() }}</div>
+                            <div class="text-sm text-blue-700">進行中</div>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg border border-green-100">
+                            <div class="text-3xl font-bold text-green-600">{{ Auth::user()->tasks()->where('status', App\Models\Task::STATUS_COMPLETED)->count() }}</div>
+                            <div class="text-sm text-green-600">完了</div>
                         </div>
                     </div>
 
