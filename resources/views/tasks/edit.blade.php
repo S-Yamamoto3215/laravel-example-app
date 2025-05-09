@@ -26,6 +26,17 @@
             </div>
 
             <div class="mb-4">
+                <label for="status" class="block text-gray-700 font-medium mb-2">ステータス</label>
+                <select name="status" id="status" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300">
+                    @foreach(App\Models\Task::getStatusOptions() as $value => $label)
+                        <option value="{{ $value }}" {{ old('status', $task->status) == $value ? 'selected' : '' }}>
+                            {{ $label }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="mb-4">
                 <label class="inline-flex items-center">
                     <input type="checkbox" name="is_completed" value="1" class="rounded border-gray-300 text-blue-500 focus:border-blue-300 focus:ring focus:ring-blue-200" {{ old('is_completed', $task->is_completed) ? 'checked' : '' }}>
                     <span class="ml-2 text-gray-700">完了済み</span>

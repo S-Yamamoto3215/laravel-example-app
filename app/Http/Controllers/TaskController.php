@@ -60,4 +60,22 @@ class TaskController extends Controller
         ]);
         return redirect()->back()->with('success', 'タスクの状態が変更されました！');
     }
+
+    /**
+     * タスクのステータスを更新する
+     */
+    public function updateStatus(Request $request, Task $task)
+    {
+        $this->authorize('update', $task);
+
+        $request->validate([
+            'status' => 'required|in:todo,in_progress,completed',
+        ]);
+
+        $task->update([
+            'status' => $request->status,
+        ]);
+
+        return redirect()->back()->with('success', 'タスクのステータスを更新しました');
+    }
 }

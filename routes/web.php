@@ -13,6 +13,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // タスク関連のルート
     Route::resource('tasks', TaskController::class);
     Route::patch('tasks/{task}/toggle', [TaskController::class, 'toggle'])->name('tasks.toggle');
+    Route::patch('tasks/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.update.status');
 
     // ダッシュボードルート
     Route::get('/dashboard', function () {
