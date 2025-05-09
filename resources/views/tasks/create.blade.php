@@ -35,6 +35,16 @@
                 </select>
             </div>
 
+            <div class="mb-4">
+                <label for="priority" class="block text-gray-700 font-medium mb-2">優先度</label>
+                <select name="priority" id="priority" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300">
+                    @foreach(App\Models\Task::getPriorityOptions() as $value => $label)
+                        <option value="{{ $value }}" {{ old('priority', 'medium') == $value ? 'selected' : '' }}>
+                            {{ $label }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
 
             <div class="flex items-center justify-between">

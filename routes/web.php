@@ -14,6 +14,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('tasks', TaskController::class);
     Route::patch('tasks/{task}/toggle', [TaskController::class, 'toggle'])->name('tasks.toggle');
     Route::patch('tasks/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.update.status');
+    Route::patch('tasks/{task}/priority', [TaskController::class, 'updatePriority'])->name('tasks.update.priority');
 
     // ダッシュボードルート
     Route::get('/dashboard', function () {

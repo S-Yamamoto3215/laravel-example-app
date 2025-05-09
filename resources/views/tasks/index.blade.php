@@ -18,6 +18,7 @@
                         <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">完了</th>
                         <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">タイトル</th>
                         <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ステータス</th>
+                        <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">優先度</th>
                         <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">アクション</th>
                     </tr>
                 </thead>
@@ -57,9 +58,9 @@
                                     @method('PATCH')
                                     <select name="status"
                                             class="rounded border-gray-300
-                                                   {{ $task->status == 'todo' ? 'bg-gray-100' : '' }}
-                                                   {{ $task->status == 'in_progress' ? 'bg-blue-100' : '' }}
-                                                   {{ $task->status == 'completed' ? 'bg-green-100' : '' }}"
+                                                {{ $task->status == 'todo' ? 'bg-gray-100' : '' }}
+                                                {{ $task->status == 'in_progress' ? 'bg-blue-100' : '' }}
+                                                {{ $task->status == 'completed' ? 'bg-green-100' : '' }}"
                                             onchange="this.form.submit()">
                                         @foreach(App\Models\Task::getStatusOptions() as $value => $label)
                                             <option value="{{ $value }}" {{ $task->status == $value ? 'selected' : '' }}>
@@ -68,6 +69,14 @@
                                         @endforeach
                                     </select>
                                 </form>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-3 py-1 rounded-full text-sm
+                                    {{ $task->priority == 'high' ? 'bg-red-100 text-red-800' : '' }}
+                                    {{ $task->priority == 'medium' ? 'bg-yellow-100 text-yellow-800' : '' }}
+                                    {{ $task->priority == 'low' ? 'bg-green-100 text-green-800' : '' }}">
+                                    {{ App\Models\Task::getPriorityOptions()[$task->priority ?? 'medium'] }}
+                                </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex space-x-2">

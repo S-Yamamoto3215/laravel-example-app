@@ -17,6 +17,7 @@ class TaskRequest extends FormRequest
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'status' => 'nullable|string|in:todo,in_progress,completed',
+            'priority' => 'nullable|string|in:high,medium,low',
         ];
     }
 }

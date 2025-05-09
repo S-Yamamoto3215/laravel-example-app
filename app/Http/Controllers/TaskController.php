@@ -22,7 +22,13 @@ class TaskController extends Controller
 
     public function store(TaskRequest $request)
     {
-        $request->user()->tasks()->create($request->validated());
+        $data = $request->validated();
+        // 優先度がセットされていない場合のデフォルト値
+        if (!isset($data['priority'])) {
+            $data['priority'] = Task::PRIORITY_MEDIUM;
+        }
+        
+        $request->user()->tasks()->create($data);
         return redirect()->route('tasks.index')->with('success', 'タスクが作成されました！');
     }
 
@@ -82,5 +88,23 @@ class TaskController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'タスクのステータスを更新しました');
+    }
+
+    /**
+     * タスクの優先度を更新する
+     */
+    public function updatePriority(Request $request, Task $task)
+    {
+        $this->authorize('update', $task);
+
+        $request->validate([
+            'priority' => 'required|in:high,medium,low',
+        ]);
+
+        $task->update([
+            'priority' => $request->priority,
+        ]);
+
+        return redirect()->back()->with('success', 'タスクの優先度を更新しました');
     }
 }

@@ -33,15 +33,40 @@
         @endif
 
         <div class="mb-4">
+            <h4 class="text-gray-600 font-medium mb-1">優先度</h4>
+            <form action="{{ route('tasks.update.priority', $task->id) }}" method="POST">
+                @csrf
+                @method('PATCH')
+                <select name="priority"
+                        class="rounded border-gray-300 w-full md:w-1/3
+                            {{ $task->priority == 'high' ? 'bg-red-100' : '' }}
+                            {{ $task->priority == 'medium' ? 'bg-yellow-100' : '' }}
+                            {{ $task->priority == 'low' ? 'bg-green-100' : '' }}">
+                    @foreach(App\Models\Task::getPriorityOptions() as $value => $label)
+                        <option value="{{ $value }}" {{ ($task->priority ?? 'medium') == $value ? 'selected' : '' }}
+                            class="{{ $value == 'high' ? 'text-red-800' : '' }}
+                                   {{ $value == 'medium' ? 'text-yellow-800' : '' }}
+                                   {{ $value == 'low' ? 'text-green-800' : '' }}">
+                            {{ $label }}
+                        </option>
+                    @endforeach
+                </select>
+                <button type="submit" class="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                    優先度更新
+                </button>
+            </form>
+        </div>
+
+        <div class="mb-4">
             <h4 class="text-gray-600 font-medium mb-1">ステータス</h4>
             <form action="{{ route('tasks.update.status', $task->id) }}" method="POST">
                 @csrf
                 @method('PATCH')
                 <select name="status"
                         class="rounded border-gray-300 w-full md:w-1/3
-                               {{ $task->status == 'todo' ? 'bg-gray-100' : '' }}
-                               {{ $task->status == 'in_progress' ? 'bg-blue-100' : '' }}
-                               {{ $task->status == 'completed' ? 'bg-green-100' : '' }}">
+                            {{ $task->status == 'todo' ? 'bg-gray-100' : '' }}
+                            {{ $task->status == 'in_progress' ? 'bg-blue-100' : '' }}
+                            {{ $task->status == 'completed' ? 'bg-green-100' : '' }}">
                     @foreach(App\Models\Task::getStatusOptions() as $value => $label)
                         <option value="{{ $value }}" {{ $task->status == $value ? 'selected' : '' }}>
                             {{ $label }}
