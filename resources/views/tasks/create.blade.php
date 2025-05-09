@@ -35,12 +35,7 @@
                 </select>
             </div>
 
-            <div class="mb-4">
-                <label class="inline-flex items-center">
-                    <input type="checkbox" name="is_completed" value="1" class="rounded border-gray-300 text-blue-500 focus:border-blue-300 focus:ring focus:ring-blue-200" {{ old('is_completed') ? 'checked' : '' }}>
-                    <span class="ml-2 text-gray-700">完了済み</span>
-                </label>
-            </div>
+
 
             <div class="flex items-center justify-between">
                 <a href="{{ route('tasks.index') }}" class="text-gray-600 hover:text-gray-800">キャンセル</a>

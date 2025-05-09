@@ -55,8 +55,13 @@ class TaskController extends Controller
     public function toggle(Task $task)
     {
         $this->authorize('update', $task);
+        // 完了ステータスと未完了（todoまたはin_progress）を切り替える
+        $newStatus = ($task->status === Task::STATUS_COMPLETED)
+            ? Task::STATUS_TODO
+            : Task::STATUS_COMPLETED;
+
         $task->update([
-            'is_completed' => !$task->is_completed
+            'status' => $newStatus
         ]);
         return redirect()->back()->with('success', 'タスクの状態が変更されました！');
     }

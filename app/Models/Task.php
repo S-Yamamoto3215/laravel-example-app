@@ -12,7 +12,6 @@ class Task extends Model
     protected $fillable = [
         'title',
         'description',
-        'is_completed',
         'user_id',
         'status',
     ];
@@ -23,7 +22,7 @@ class Task extends Model
     }
 
     protected $casts = [
-        'is_completed' => 'boolean',
+        // キャスト定義
     ];
 
     // ステータスの定数を定義
