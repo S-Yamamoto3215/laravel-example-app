@@ -21,8 +21,11 @@ class CategoryRequest extends FormRequest
      */
     public function rules(): array
     {
+        // ルートからカテゴリを取得し、存在する場合はそのIDを取得
+        $categoryId = $this->route('category') ? $this->route('category')->id : null;
+
         return [
-            'name' => 'required|string|max:255|unique:categories,name,' . ($this->category ?? ''),
+            'name' => 'required|string|max:255|unique:categories,name,' . $categoryId,
             'color' => 'required|string|regex:/^[0-9a-fA-F]{6}$/', // 16進数のカラーコード（6桁）、#なし
         ];
     }
