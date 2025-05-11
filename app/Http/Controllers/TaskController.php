@@ -12,7 +12,7 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         $query = Auth::user()->tasks()->latest();
-        
+
         // カテゴリによるフィルタリング
         if ($request->has('category')) {
             if ($request->category === 'none') {
@@ -21,20 +21,20 @@ class TaskController extends Controller
                 $query->where('category_id', $request->category);
             }
         }
-        
+
         // ステータスによるフィルタリング
         if ($request->has('status') && $request->status) {
             $query->where('status', $request->status);
         }
-        
+
         // 優先度によるフィルタリング
         if ($request->has('priority') && $request->priority) {
             $query->where('priority', $request->priority);
         }
-        
+
         $tasks = $query->get();
         $categories = \App\Models\Category::all();
-        
+
         return view('tasks.index', compact('tasks', 'categories'));
     }
 
