@@ -3,9 +3,18 @@
 @section('content')
     <div class="mb-4 flex justify-between items-center">
         <h2 class="text-2xl font-semibold">タスク一覧</h2>
-        <a href="{{ route('tasks.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-            新規タスク作成
-        </a>
+        <div class="flex space-x-2">
+            <form action="{{ route('tasks.destroy.completed') }}" method="POST" onsubmit="return confirm('完了済みのタスクをすべて削除してもよろしいですか？');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
+                    完了タスク削除
+                </button>
+            </form>
+            <a href="{{ route('tasks.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                新規タスク作成
+            </a>
+        </div>
     </div>
 
     <div class="mb-6 p-4 bg-white rounded-lg shadow">

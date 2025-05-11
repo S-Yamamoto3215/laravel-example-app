@@ -133,4 +133,18 @@ class TaskController extends Controller
 
         return redirect()->back()->with('success', 'タスクの優先度を更新しました');
     }
+
+    public function destroyCompleted()
+    {
+        // 完了したタスクのみを取得して削除
+        $completedTasks = Auth::user()->tasks()->where('status', Task::STATUS_COMPLETED)->get();
+
+        // 各タスクに対して権限チェックと削除を実行
+        foreach($completedTasks as $task) {
+            $this->authorize('delete', $task);
+            $task->delete();
+        }
+
+        return redirect()->route('tasks.index')->with('success', '完了済みタスクがすべて削除されました！');
+    }
 }
