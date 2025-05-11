@@ -15,11 +15,20 @@ class Task extends Model
         'user_id',
         'status',
         'priority',
+        'category_id',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * このタスクが属するカテゴリを取得
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 
     protected $casts = [
