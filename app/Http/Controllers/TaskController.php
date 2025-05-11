@@ -17,7 +17,8 @@ class TaskController extends Controller
 
     public function create()
     {
-        return view('tasks.create');
+        $categories = \App\Models\Category::all();
+        return view('tasks.create', compact('categories'));
     }
 
     public function store(TaskRequest $request)
@@ -27,7 +28,7 @@ class TaskController extends Controller
         if (!isset($data['priority'])) {
             $data['priority'] = Task::PRIORITY_MEDIUM;
         }
-        
+
         $request->user()->tasks()->create($data);
         return redirect()->route('tasks.index')->with('success', 'タスクが作成されました！');
     }
@@ -41,7 +42,8 @@ class TaskController extends Controller
     public function edit(Task $task)
     {
         $this->authorize('update', $task);
-        return view('tasks.edit', compact('task'));
+        $categories = \App\Models\Category::all();
+        return view('tasks.edit', compact('task', 'categories'));
     }
 
     public function update(TaskRequest $request, Task $task)
