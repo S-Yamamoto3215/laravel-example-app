@@ -8,6 +8,44 @@
         </a>
     </div>
 
+    <div class="mb-6 p-4 bg-white rounded-lg shadow">
+        <form action="{{ route('tasks.index') }}" method="GET" class="flex flex-wrap gap-4">
+            <div class="flex-1">
+                <label for="category_filter" class="block text-sm font-medium text-gray-700 mb-1">カテゴリでフィルタ</label>
+                <select name="category" id="category_filter" class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200" onchange="this.form.submit()">
+                    <option value="">すべてのカテゴリ</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                    <option value="none" {{ request('category') === 'none' ? 'selected' : '' }}>カテゴリなし</option>
+                </select>
+            </div>
+            <div class="flex-1">
+                <label for="status_filter" class="block text-sm font-medium text-gray-700 mb-1">ステータスでフィルタ</label>
+                <select name="status" id="status_filter" class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200" onchange="this.form.submit()">
+                    <option value="">すべてのステータス</option>
+                    @foreach(App\Models\Task::getStatusOptions() as $value => $label)
+                        <option value="{{ $value }}" {{ request('status') == $value ? 'selected' : '' }}>{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="flex-1">
+                <label for="priority_filter" class="block text-sm font-medium text-gray-700 mb-1">優先度でフィルタ</label>
+                <select name="priority" id="priority_filter" class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200" onchange="this.form.submit()">
+                    <option value="">すべての優先度</option>
+                    @foreach(App\Models\Task::getPriorityOptions() as $value => $label)
+                        <option value="{{ $value }}" {{ request('priority') == $value ? 'selected' : '' }}>{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="w-full flex justify-end">
+                <a href="{{ route('tasks.index') }}" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-900">フィルタをクリア</a>
+            </div>
+        </form>
+    </div>
+
     @if($tasks->isEmpty())
         <p class="text-center py-8 text-gray-500">タスクはありません。新しいタスクを作成しましょう！</p>
     @else
@@ -19,6 +57,7 @@
                         <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">タイトル</th>
                         <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ステータス</th>
                         <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">優先度</th>
+                        <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">カテゴリ</th>
                         <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">アクション</th>
                     </tr>
                 </thead>
@@ -77,6 +116,16 @@
                                     {{ $task->priority == 'low' ? 'bg-green-100 text-green-800' : '' }}">
                                     {{ App\Models\Task::getPriorityOptions()[$task->priority ?? 'medium'] }}
                                 </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                @if($task->category)
+                                    <div class="flex items-center">
+                                        <div class="w-3 h-3 rounded-full mr-2" style="background-color: #{{ $task->category->color }}"></div>
+                                        <span>{{ $task->category->name }}</span>
+                                    </div>
+                                @else
+                                    <span class="text-gray-400">未設定</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex space-x-2">

@@ -23,6 +23,12 @@
                         text-xs font-medium px-2.5 py-0.5 rounded">
                 {{ App\Models\Task::getStatusOptions()[$task->status] ?? '未設定' }}
             </span>
+
+            @if($task->category)
+                <span class="ml-2 text-xs font-medium px-2.5 py-0.5 rounded" style="background-color: #{{ $task->category->color }}40; color: #{{ $task->category->color }};">
+                    {{ $task->category->name }}
+                </span>
+            @endif
         </div>
 
         @if($task->description)
@@ -53,6 +59,27 @@
                 </select>
                 <button type="submit" class="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
                     優先度更新
+                </button>
+            </form>
+        </div>
+
+        <div class="mb-4">
+            <h4 class="text-gray-600 font-medium mb-1">カテゴリ</h4>
+            <form action="{{ route('tasks.update', $task->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <select name="category_id" class="rounded border-gray-300 w-full md:w-1/3">
+                    <option value="">カテゴリなし</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}"
+                            {{ $task->category_id == $category->id ? 'selected' : '' }}
+                            style="color: #{{ $category->color }}">
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+                <button type="submit" class="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                    カテゴリ更新
                 </button>
             </form>
         </div>

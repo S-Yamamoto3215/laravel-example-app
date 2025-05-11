@@ -9,10 +9,33 @@ use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $tasks = Auth::user()->tasks()->latest()->get();
-        return view('tasks.index', compact('tasks'));
+        $query = Auth::user()->tasks()->latest();
+        
+        // カテゴリによるフィルタリング
+        if ($request->has('category')) {
+            if ($request->category === 'none') {
+                $query->whereNull('category_id');
+            } elseif ($request->category) {
+                $query->where('category_id', $request->category);
+            }
+        }
+        
+        // ステータスによるフィルタリング
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
+        }
+        
+        // 優先度によるフィルタリング
+        if ($request->has('priority') && $request->priority) {
+            $query->where('priority', $request->priority);
+        }
+        
+        $tasks = $query->get();
+        $categories = \App\Models\Category::all();
+        
+        return view('tasks.index', compact('tasks', 'categories'));
     }
 
     public function create()
@@ -36,7 +59,8 @@ class TaskController extends Controller
     public function show(Task $task)
     {
         $this->authorize('view', $task);
-        return view('tasks.show', compact('task'));
+        $categories = \App\Models\Category::all();
+        return view('tasks.show', compact('task', 'categories'));
     }
 
     public function edit(Task $task)
