@@ -23,7 +23,7 @@ class CategoryRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255|unique:categories,name,' . ($this->category ?? ''),
-            'color' => 'required|string|regex:/^#[0-9a-fA-F]{6}$/', // 16進数のカラーコード（6桁）
+            'color' => 'required|string|regex:/^[0-9a-fA-F]{6}$/', // 16進数のカラーコード（6桁）、#なし
         ];
     }
 }
