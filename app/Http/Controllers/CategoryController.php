@@ -64,12 +64,30 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        // カテゴリが使用されているタスクがあるかどうか確認
-        if ($category->tasks()->exists()) {
-            return redirect()->route('categories.index')->with('error', 'このカテゴリは使用中のため削除できません。');
-        }
+        // トランザクション開始
+        \DB::beginTransaction();
 
-        $category->delete();
-        return redirect()->route('categories.index')->with('success', 'カテゴリが削除されました！');
+        try {
+            // このカテゴリを使用しているタスクのカテゴリIDをnullに設定
+            $tasksCount = $category->tasks()->count();
+            $category->tasks()->update(['category_id' => null]);
+
+            // カテゴリを削除
+            $category->delete();
+
+            // トランザクション完了
+            \DB::commit();
+
+            $message = 'カテゴリが削除されました！';
+            if ($tasksCount > 0) {
+                $message .= " {$tasksCount}件のタスクからカテゴリが削除されました。";
+            }
+
+            return redirect()->route('categories.index')->with('success', $message);
+        } catch (\Exception $e) {
+            // エラーが発生した場合はロールバック
+            \DB::rollBack();
+            return redirect()->route('categories.index')->with('error', 'カテゴリの削除に失敗しました: ' . $e->getMessage());
+        }
     }
 }
