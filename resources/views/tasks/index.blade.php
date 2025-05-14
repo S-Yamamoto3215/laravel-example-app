@@ -49,6 +49,17 @@
                     @endforeach
                 </select>
             </div>
+            <div class="flex-1">
+                <label for="due_filter" class="block text-sm font-medium text-gray-700 mb-1">期限日でフィルタ</label>
+                <select name="due_filter" id="due_filter" class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200" onchange="this.form.submit()">
+                    <option value="">すべての期限日</option>
+                    <option value="today" {{ request('due_filter') == 'today' ? 'selected' : '' }}>今日</option>
+                    <option value="tomorrow" {{ request('due_filter') == 'tomorrow' ? 'selected' : '' }}>明日</option>
+                    <option value="this_week" {{ request('due_filter') == 'this_week' ? 'selected' : '' }}>今週</option>
+                    <option value="overdue" {{ request('due_filter') == 'overdue' ? 'selected' : '' }}>期限切れ</option>
+                    <option value="no_due_date" {{ request('due_filter') == 'no_due_date' ? 'selected' : '' }}>期限日なし</option>
+                </select>
+            </div>
             <div class="w-full flex justify-end">
                 <a href="{{ route('tasks.index') }}" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-900">フィルタをクリア</a>
             </div>
@@ -66,6 +77,7 @@
                         <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">タイトル</th>
                         <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ステータス</th>
                         <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">優先度</th>
+                        <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">期限日</th>
                         <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">カテゴリ</th>
                         <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">アクション</th>
                     </tr>
@@ -125,6 +137,15 @@
                                     {{ $task->priority == 'low' ? 'bg-green-100 text-green-800' : '' }}">
                                     {{ App\Models\Task::getPriorityOptions()[$task->priority ?? 'medium'] }}
                                 </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                @if($task->due_date)
+                                    <span class="{{ $task->due_date->isPast() && $task->status !== 'completed' ? 'text-red-600 font-bold' : '' }}">
+                                        {{ $task->due_date->format('Y年m月d日') }}
+                                    </span>
+                                @else
+                                    <span class="text-gray-400">未設定</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if($task->category)

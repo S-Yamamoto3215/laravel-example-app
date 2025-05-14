@@ -19,6 +19,7 @@ class TaskRequest extends FormRequest
             'status' => 'nullable|string|in:todo,in_progress,completed',
             'priority' => 'nullable|string|in:high,medium,low',
             'category_id' => 'nullable|exists:categories,id',
+            'due_date' => 'nullable|date',
         ];
     }
 }

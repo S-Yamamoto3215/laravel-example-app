@@ -16,6 +16,7 @@ class Task extends Model
         'status',
         'priority',
         'category_id',
+        'due_date',
     ];
 
     public function user()
@@ -32,7 +33,7 @@ class Task extends Model
     }
 
     protected $casts = [
-        // キャスト定義
+        'due_date' => 'date',
     ];
 
     // ステータスの定数を定義

@@ -32,6 +32,28 @@ class TaskController extends Controller
             $query->where('priority', $request->priority);
         }
 
+        // 期限日によるフィルタリング
+        if ($request->has('due_filter')) {
+            switch ($request->due_filter) {
+                case 'today':
+                    $query->whereDate('due_date', today());
+                    break;
+                case 'tomorrow':
+                    $query->whereDate('due_date', today()->addDay());
+                    break;
+                case 'this_week':
+                    $query->whereBetween('due_date', [today(), today()->endOfWeek()]);
+                    break;
+                case 'overdue':
+                    $query->whereDate('due_date', '<', today())
+                          ->where('status', '!=', Task::STATUS_COMPLETED);
+                    break;
+                case 'no_due_date':
+                    $query->whereNull('due_date');
+                    break;
+            }
+        }
+
         $tasks = $query->get();
         $categories = \App\Models\Category::all();
 

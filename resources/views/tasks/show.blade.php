@@ -85,6 +85,27 @@
         </div>
 
         <div class="mb-4">
+            <h4 class="text-gray-600 font-medium mb-1">期限日</h4>
+            <form action="{{ route('tasks.update', $task->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="flex flex-col md:flex-row md:items-end md:space-x-2">
+                    <div>
+                        <input type="date" name="due_date"
+                            value="{{ $task->due_date ? $task->due_date->format('Y-m-d') : '' }}"
+                            class="rounded border-gray-300 {{ $task->due_date && $task->due_date->isPast() && $task->status !== 'completed' ? 'border-red-300 bg-red-50' : '' }}" />
+                        @if($task->due_date && $task->due_date->isPast() && $task->status !== 'completed')
+                            <p class="text-red-600 text-sm mt-1">期限が過ぎています！</p>
+                        @endif
+                    </div>
+                    <button type="submit" class="mt-2 md:mt-0 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                        期限日更新
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="mb-4">
             <h4 class="text-gray-600 font-medium mb-1">ステータス</h4>
             <form action="{{ route('tasks.update.status', $task->id) }}" method="POST">
                 @csrf
@@ -107,8 +128,16 @@
         </div>
 
         <div class="text-sm text-gray-500">
-            <div>作成日時: {{ $task->created_at }}</div>
-            <div>最終更新: {{ $task->updated_at }}</div>
+            <div>作成日時: {{ $task->created_at->format('Y年m月d日 H:i') }}</div>
+            <div>最終更新: {{ $task->updated_at->format('Y年m月d日 H:i') }}</div>
+            @if($task->due_date)
+                <div class="{{ $task->due_date->isPast() && $task->status !== 'completed' ? 'text-red-600 font-semibold' : '' }}">
+                    期限日: {{ $task->due_date->format('Y年m月d日') }}
+                    @if($task->due_date->isPast() && $task->status !== 'completed')
+                        （期限切れ）
+                    @endif
+                </div>
+            @endif
         </div>
 
         <div class="mt-6 pt-4 border-t border-gray-200">
